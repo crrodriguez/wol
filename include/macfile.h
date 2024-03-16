@@ -27,7 +27,6 @@
 
 #include <stdio.h>
 
-int macfile_parse (FILE *fp, char **mac_str, char **host, unsigned int *port,
-										char **passwd);
+int macfile_parse(FILE *fp, char **mac_str, char **host, unsigned int *port, char **passwd);
 
 #endif /* _MACFILE_H */

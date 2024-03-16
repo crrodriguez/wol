@@ -20,98 +20,84 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /* HAVE_CONFIG_H */
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "magic.h"
-#include "proxy.h"
 #include "md5.h"
 #include "net.h"
+#include "proxy.h"
 
 #define MD5_LENGTH 16
 #define CHALLENGE_LENGTH 16
 #define HEX_CHALLENGE CHALLENGE_LENGTH * 2 + 1
 
-static void md5_buffer (const unsigned char *buf, size_t len, unsigned char *sum)
-{
-  MD5_CTX ctx;
+static void md5_buffer(const unsigned char *buf, size_t len, unsigned char *sum) {
+        MD5_CTX ctx;
 
-  MD5_Init (&ctx);
-  MD5_Update (&ctx, buf, len);
-  MD5_Final (sum, &ctx);
+        MD5_Init(&ctx);
+        MD5_Update(&ctx, buf, len);
+        MD5_Final(sum, &ctx);
 }
 
-int
-proxy_send (int sock,
-	    const char *macbuf,
-	    const char *passwd)
-{
-  size_t i, j, len;
-  unsigned char rsbuf[HEX_CHALLENGE];
-  unsigned char challenge[CHALLENGE_LENGTH];
-  unsigned char md5sum[MD5_LENGTH];
-  unsigned char *buf, *tmp;
+int proxy_send(int sock, const char *macbuf, const char *passwd) {
+        size_t i, j, len;
+        unsigned char rsbuf[HEX_CHALLENGE];
+        unsigned char challenge[CHALLENGE_LENGTH];
+        unsigned char md5sum[MD5_LENGTH];
+        unsigned char *buf, *tmp;
 
-  /* receive challenge in hex format */
+        /* receive challenge in hex format */
 
-  len = tcp_recv (sock, &rsbuf, HEX_CHALLENGE);
+        len = tcp_recv(sock, &rsbuf, HEX_CHALLENGE);
 
-  if (len < HEX_CHALLENGE)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+        if (len < HEX_CHALLENGE) {
+                errno = EINVAL;
+                return -1;
+        }
 
-  printf ("recvd: %s", rsbuf);
+        printf("recvd: %s", rsbuf);
 
-  for (i = j = 0; i < HEX_CHALLENGE - 1; i += 2, j++)
-    {
-      sscanf (&rsbuf[i], "%2x", (unsigned int *) &challenge[j]);
-    }
+        for (i = j = 0; i < HEX_CHALLENGE - 1; i += 2, j++) {
+                sscanf(&rsbuf[i], "%2x", (unsigned int *) &challenge[j]);
+        }
 
-  /* compute reply */
+        /* compute reply */
 
-  len = sizeof (challenge) + MAC_LEN + strlen (passwd);
+        len = sizeof(challenge) + MAC_LEN + strlen(passwd);
 
-  buf = tmp = (unsigned char *) malloc (len);
-  
-  if(!buf) {
-    return -ENOMEM;
-    }
-  
-  memcpy (tmp, challenge, sizeof (challenge));
+        buf = tmp = (unsigned char *) malloc(len);
 
-  tmp += sizeof (challenge);
-  memcpy (tmp, macbuf, MAC_LEN);
+        if (!buf) {
+                return -ENOMEM;
+        }
 
-  tmp += MAC_LEN;
-  memcpy (tmp, passwd, strlen (passwd));
+        memcpy(tmp, challenge, sizeof(challenge));
 
-  memset (md5sum, 0, sizeof (md5sum));
-  md5_buffer (buf, len, md5sum);
+        tmp += sizeof(challenge);
+        memcpy(tmp, macbuf, MAC_LEN);
 
-  free (buf);
+        tmp += MAC_LEN;
+        memcpy(tmp, passwd, strlen(passwd));
 
-  printf ("sum %c%c%c %zu\n", md5sum[0],md5sum[1],md5sum[2], len);
+        memset(md5sum, 0, sizeof(md5sum));
+        md5_buffer(buf, len, md5sum);
 
-  for (i = j = 0; i < MD5_LENGTH; i++, j += 2)
-    {
-      snprintf (&rsbuf[j], 2, "%2x", md5sum[i]);
-    }
+        free(buf);
 
-  rsbuf[HEX_CHALLENGE] = '\n';
+        printf("sum %c%c%c %zu\n", md5sum[0], md5sum[1], md5sum[2], len);
 
-  printf ("reply: %s", rsbuf);
+        for (i = j = 0; i < MD5_LENGTH; i++, j += 2) {
+                snprintf(&rsbuf[j], 2, "%2x", md5sum[i]);
+        }
 
-  /* send to proxy */
+        rsbuf[HEX_CHALLENGE] = '\n';
 
-  return tcp_send (sock, rsbuf, HEX_CHALLENGE);
+        printf("reply: %s", rsbuf);
+
+        /* send to proxy */
+
+        return tcp_send(sock, rsbuf, HEX_CHALLENGE);
 }

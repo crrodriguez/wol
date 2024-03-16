@@ -25,19 +25,14 @@
 #ifndef _WOL_H
 #define _WOL_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /* HAVE_CONFIG_H */
-
-
 #include <locale.h>
 
 /* i18n support */
 #if defined(ENABLE_NLS)
-#include <libintl.h>
-#define _(Text) gettext (Text)
+#        include <libintl.h>
+#        define _(Text) gettext(Text)
 #else
-#define _(Text) Text
+#        define _(Text) Text
 #endif /* ENABLE_NLS */
 
 

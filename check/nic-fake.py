@@ -4,17 +4,17 @@
 from socket import *
 from struct import *
 from string import split, atoi
-import os, sys, thread, threading
+import os, sys, _thread, threading
 
 
 
 
 def getout (i):
 	if i:
-		print "ERROR"
+		print("ERROR")
 		sys.exit (i)
 	else:
-		print "GOOD"
+		print("GOOD")
 		sys.exit (0)
 
 
@@ -33,10 +33,10 @@ def wait_for_packet (lck, mac, sec):
 	l = len (r)
 
 	if l < 102:
-		print "Received " + `l` + " octets, too less"
+		print("Received " + repr(l) + " octets, too less")
 		getout (1)
 
-	data = unpack (`l` + 'B', r)
+	data = unpack (repr(l) + 'B', r)
 
 	header = data[0:6]
 
@@ -47,34 +47,34 @@ def wait_for_packet (lck, mac, sec):
 		magic = data[6:]
 
 
-	print "Received " + `l` + " octets"
+	print("Received " + repr(l) + " octets")
 
 	for h in header:
 		if h != 0xff:
-			print "Error: Header not conforming"
-			print "Header:   %2x %2x %2x %2x %2x %2x" % (header[0], header[1], header[2], header[3], header[4], header[5])
+			print("Error: Header not conforming")
+			print("Header:   %2x %2x %2x %2x %2x %2x" % (header[0], header[1], header[2], header[3], header[4], header[5]))
 			getout (1)
 
-	print "Header GOOD"
+	print("Header GOOD")
 
 	for i in range (1, 16):
 		off = i * 6
 		for j in range (0, 6):
 			if magic[off + j] != mac[j]:
-				print "Error: Magic Data not conforming"
-				print "Magic(" + `off` + "): %2x %2x %2x %2x %2x %2x" % (magic[0+off], magic[1+off], magic[2+off], magic[3+off], magic[4+off], magic[5+off])
+				print("Error: Magic Data not conforming")
+				print("Magic(" + repr(off) + "): %2x %2x %2x %2x %2x %2x" % (magic[0+off], magic[1+off], magic[2+off], magic[3+off], magic[4+off], magic[5+off]))
 				getout (1)
 
-	print "Data GOOD"
+	print("Data GOOD")
 
 	if l > 102: # SecureON
 		for i in range (0, 6):
 			if secureon[i] != sec[i]:
-				print "Error: SecureON password not conforming"
-				print "SecureON: %2x %2x %2x %2x %2x %2x" % (secureon[0], secureon[1], secureon[2], secureon[3], secureon[4], secureon[5])
+				print("Error: SecureON password not conforming")
+				print("SecureON: %2x %2x %2x %2x %2x %2x" % (secureon[0], secureon[1], secureon[2], secureon[3], secureon[4], secureon[5]))
 				getout (1)
 
-		print "SecureON GOOD"
+		print("SecureON GOOD")
 
 
 
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 	lck = threading.Condition ()
 	lck.acquire ()
 
-	thread.start_new_thread (wait_for_packet, (lck, mac , sec))
+	_thread.start_new_thread (wait_for_packet, (lck, mac , sec))
 
 	lck.wait ()
 	lck.release ()

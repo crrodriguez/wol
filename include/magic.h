@@ -26,30 +26,25 @@
 
 #include <sys/types.h>
 
-#define MAGIC_HEADER    6
-#define MAC_LEN         6
-#define MAGIC_TIMES    16
-#define MAGIC_SECUREON  6
+#define MAGIC_HEADER 6
+#define MAC_LEN 6
+#define MAGIC_TIMES 16
+#define MAGIC_SECUREON 6
 
 
-
-struct
-magic
-{
-	unsigned char *packet;
-	size_t size;
+struct magic {
+        unsigned char *packet;
+        size_t size;
 };
 
 
-
-struct magic *magic_create (int with_passwd);
-
-
-void magic_destroy (struct magic *m);
+struct magic *magic_create(int with_passwd);
 
 
-int magic_assemble (struct magic *magic_buf, const char *mac_str,
-										const char *secureon);
+void magic_destroy(struct magic *m);
+
+
+int magic_assemble(struct magic *magic_buf, const char *mac_str, const char *secureon);
 
 
 #endif /* _MAGIC_H */

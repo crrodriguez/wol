@@ -22,27 +22,19 @@
  *	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif /* HAVE_CONFIG_H */
-
+#include <errno.h>
+#include <net/if.h>
+#include <netinet/ether.h>
+#include <netinet/if_ether.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h> /* memset() in HP-UX */
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <netinet/if_ether.h>
-#include <netinet/ether.h>
+#include <sys/types.h>
 
-#include "wol.h"
 #include "magic.h"
-
-
+#include "wol.h"
 
 /*
  *	How a Magic Packet Frame looks like:
@@ -72,131 +64,100 @@
  *	 -----------------------------------------
  */
 
-
 /* struct for typecasting a normal magic packet */
-struct
-packet
-{
-	unsigned char header[MAGIC_HEADER];
-	unsigned char addr[MAGIC_TIMES][MAC_LEN];
+struct packet {
+        unsigned char header[MAGIC_HEADER];
+        unsigned char addr[MAGIC_TIMES][MAC_LEN];
 };
 
 /* struct for typecasting a SecureON magic packet */
-struct
-secureon
-{
-	unsigned char header[MAGIC_HEADER];
-	unsigned char addr[MAGIC_TIMES][MAC_LEN];
-	unsigned char passwd[MAGIC_SECUREON];
+struct secureon {
+        unsigned char header[MAGIC_HEADER];
+        unsigned char addr[MAGIC_TIMES][MAC_LEN];
+        unsigned char passwd[MAGIC_SECUREON];
 };
 
+struct magic *magic_create(int with_passwd) {
+        struct magic *mag;
 
+        mag = (struct magic *) malloc(sizeof(struct magic));
+        if (!mag)
+                return NULL;
 
-struct magic *
-magic_create (int with_passwd)
-{
-	struct magic *mag;
+        if (with_passwd)
+                mag->size = sizeof(struct secureon);
+        else
+                mag->size = sizeof(struct packet);
 
-	mag = (struct magic *) malloc (sizeof (struct magic));
-	if(!mag)
-		return NULL;
+        mag->packet = (unsigned char *) malloc(mag->size);
+        if (!mag->packet)
+                return NULL;
 
-	if (with_passwd)
-		mag->size = sizeof (struct secureon);
-	else
-		mag->size = sizeof (struct packet);
-
-	mag->packet = (unsigned char *) malloc (mag->size);
-	if(!mag->packet)
-		return NULL;
-
-	return mag;
+        return mag;
 }
 
-
-
-void
-magic_destroy (struct magic *m)
-{
-	free ((void *) m->packet);
-	free ((void *) m);
+void magic_destroy(struct magic *m) {
+        free((void *) m->packet);
+        free((void *) m);
 }
 
+int magic_assemble(struct magic *magic_buf, const char *mac_str, const char *passwd_str) {
+        unsigned int m[MAC_LEN];
+        int j, k;
 
+        if (mac_str == NULL || magic_buf == NULL)
+                return -1;
 
-int
-magic_assemble (struct magic *magic_buf, const char *mac_str,
-								const char *passwd_str)
-{
-	unsigned int m[MAC_LEN];
-	int j, k;
+        /* split the MAC address string into it's hex components */
+        if (sscanf(mac_str, "%2x:%2x:%2x:%2x:%2x:%2x", &m[0], &m[1], &m[2], &m[3], &m[4], &m[5]) != MAC_LEN) {
+                struct ether_addr ea;
 
+                /* lets parse /etc/ethers for ethernet name resolving
+                 * FIXME: ether_hostton() is not implemented on every platform
+                 */
+                if (ether_hostton(mac_str, &ea)) {
+                        errno = EINVAL;
+                        return -1;
+                }
 
-	if (mac_str == NULL || magic_buf == NULL) return -1;
+                for (j = 0; j < MAC_LEN; ++j)
+                        m[j] = ea.ether_addr_octet[j];
+        }
 
-	/* split the MAC address string into it's hex components */
-	if (sscanf (mac_str, "%2x:%2x:%2x:%2x:%2x:%2x",
-							&m[0], &m[1], &m[2], &m[3], &m[4], &m[5]) != MAC_LEN)
-		{
-			struct ether_addr ea;
+        /* accommodate the packet chunk's size to the packet type */
+        if (passwd_str && magic_buf->size != sizeof(struct secureon)) {
+                magic_buf->packet = (unsigned char *) realloc(
+                                (void *) magic_buf->packet, sizeof(struct secureon));
+                magic_buf->size = sizeof(struct secureon);
+        } else if (passwd_str == NULL && magic_buf->size != sizeof(struct packet)) {
+                magic_buf->packet = (unsigned char *) realloc(
+                                (void *) magic_buf->packet, sizeof(struct packet));
+                magic_buf->size = sizeof(struct packet);
+        }
 
-			/* lets parse /etc/ethers for ethernet name resolving
-			 * FIXME: ether_hostton() is not implemented on every platform
-			 */
-			if (ether_hostton (mac_str, &ea))
-				{
-					errno = EINVAL;
-					return -1;
-				}
+        /* assemble magic packet header */
+        memset((void *) magic_buf->packet, 0xff, MAGIC_HEADER);
 
-			for (j = 0; j < MAC_LEN; ++j)
-				m[j] = ea.ether_addr_octet[j];
-		}
+        /* and now the data */
+        for (j = 0; j < MAGIC_TIMES; j++) {
+                for (k = 0; k < MAC_LEN; k++)
+                        ((struct packet *) magic_buf->packet)->addr[j][k] = (unsigned char) m[k];
+        }
 
-	/* accommodate the packet chunk's size to the packet type */
-	if (passwd_str && magic_buf->size != sizeof (struct secureon))
-		{
-			magic_buf->packet = (unsigned char *) realloc ((void *) magic_buf->packet,
-																							sizeof (struct secureon));
-			magic_buf->size = sizeof (struct secureon);
-		}
-	else if (passwd_str == NULL && magic_buf->size != sizeof (struct packet))
-		{
-			magic_buf->packet = \
-									(unsigned char *) realloc ((void *) magic_buf->packet,
-																							sizeof (struct packet));
-			magic_buf->size = sizeof (struct packet);
-		}
+        /* add the SecureON passwd */
+        if (passwd_str) {
+                unsigned int s[MAGIC_SECUREON];
 
+                /* split the password string into it's hex components */
+                if (sscanf(passwd_str, "%2x-%2x-%2x-%2x-%2x-%2x", &s[0], &s[1], &s[2], &s[3], &s[4], &s[5]) !=
+                    MAGIC_SECUREON) {
+                        errno = EINVAL;
+                        return -2;
+                }
 
-	/* assemble magic packet header */
-	memset ((void *) magic_buf->packet, 0xff, MAGIC_HEADER);
+                for (j = 0; j < MAGIC_SECUREON; j++)
+                        ((struct secureon *) magic_buf->packet)->passwd[j] = (unsigned char) s[j];
+        }
 
-	/* and now the data */
-	for (j = 0; j < MAGIC_TIMES; j++)
-		{
-			for (k = 0; k < MAC_LEN; k++)
-				((struct packet *) magic_buf->packet)->addr[j][k] = \
-																							(unsigned char) m[k];
-		}
-
-	/* add the SecureON passwd */
-	if (passwd_str)
-		{
-			unsigned int s[MAGIC_SECUREON];
-
-			/* split the password string into it's hex components */
-			if (sscanf (passwd_str, "%2x-%2x-%2x-%2x-%2x-%2x",
-									&s[0], &s[1], &s[2], &s[3], &s[4], &s[5]) != MAGIC_SECUREON)
-				{
-					errno = EINVAL;
-					return -2;
-				}
-
-			for (j = 0; j < MAGIC_SECUREON; j++)
-				((struct secureon *) magic_buf->packet)->passwd[j] = \
-																									(unsigned char) s[j];
-		}
-
-	return 0;
+        return 0;
 }

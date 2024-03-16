@@ -7,4 +7,4 @@ sources = [
 'wol.c'
 ]
 # Create the executable target
-executable('wol', sources, include_directories : incdir)
+executable('wol', sources, include_directories : incdir,  gnu_symbol_visibility : 'hidden')

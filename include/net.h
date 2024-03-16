@@ -28,29 +28,20 @@
 #include <sys/types.h>
 
 
-int udp_open (void);
+int udp_open(void);
 
-int tcp_open (const char *ip_str, unsigned int port);
+int tcp_open(const char *ip_str, unsigned int port);
 
-int raw_open (void);
+int raw_open(void);
 
-int net_close (int socket);
+int net_close(int socket);
 
-ssize_t tcp_send (int socket,
-		  const void *buf,
-		  size_t len);
+ssize_t tcp_send(int socket, const void *buf, size_t len);
 
-ssize_t tcp_recv (int socket,
-		  void *buf,
-		  size_t len);
+ssize_t tcp_recv(int socket, void *buf, size_t len);
 
-ssize_t udp_send (int socket,
-		  const char *host_str,
-		  unsigned short int port,
-		  const void *buf, size_t len);
+ssize_t udp_send(int socket, const char *host_str, unsigned short int port, const void *buf, size_t len);
 
-ssize_t raw_send (int socket,
-		  const void *buf,
-		  size_t len);
+ssize_t raw_send(int socket, const void *buf, size_t len);
 
 #endif /* _NET_H */

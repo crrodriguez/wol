@@ -25,8 +25,6 @@
 #ifndef _PROXY_H
 #define _PROXY_H
 
-int proxy_send (int sock,
-		const char *macbuf,
-		const char *passwd);
+int proxy_send(int sock, const char *macbuf, const char *passwd);
 
 #endif /* _PROXY_H */
