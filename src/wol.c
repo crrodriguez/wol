@@ -37,13 +37,10 @@
 #include <errno.h>
 #include <error.h>
 
-#include "wrappers.h"
-#include "xalloc.h"
 #include "wol.h"
 #include "magic.h"
 #include "net.h"
 #include "macfile.h"
-#include "getpass4.h"
 #include "proxy.h"
 
 
@@ -259,7 +256,7 @@ parse_args (int argc, char *argv[])
 	      if (password_set)
 		break;
 	      
-	      if (getpass4 (_("Password"), &passwd, &n, stdin) == -1)
+	      if ((passwd = getpass (_("Password"))) == NULL)
 		{
 		  error (1, 0, "getpass4 failed");
 		}
@@ -353,7 +350,7 @@ assemble_and_send (struct magic *m,
       /* request proxy password if it's not given */
       if (proxy_pass == NULL)
 	{
-	  if (getpass4 (_("Password"), &proxy_pass, &n, stdin) == -1)
+	  if ((proxy_pass = getpass (_("Password"))) == NULL)
 	    {
 	      error (1, 0, "getpass4 failed");
 	    }
@@ -362,7 +359,7 @@ assemble_and_send (struct magic *m,
       errval = proxy_send (socketfd, mac_str, proxy_pass);
 
       /* free possible new password */
-      XFREE (proxy_pass);
+      free (proxy_pass);
       proxy_pass = NULL;
 
       if (errval)
@@ -492,9 +489,9 @@ main (int argc, char *argv[])
 	  
 	  ret -= assemble_and_send (magic, mac_str, host_str, port, passwd, sockfd);
 	  
-	  XFREE (mac_str);
-	  XFREE (host_str);
-	  XFREE (passwd);
+	  free (mac_str);
+	  free (host_str);
+	  free (passwd);
 	}
 
       fclose (fp);

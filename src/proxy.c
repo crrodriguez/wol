@@ -26,12 +26,11 @@
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
 
-#include "wrappers.h"
-#include "xalloc.h"
 #include "magic.h"
 #include "proxy.h"
 #include "md5.h"
@@ -41,6 +40,14 @@
 #define CHALLENGE_LENGTH 16
 #define HEX_CHALLENGE CHALLENGE_LENGTH * 2 + 1
 
+static void md5_buffer (const unsigned char *buf, size_t len, unsigned char *sum)
+{
+  MD5_CTX ctx;
+
+  MD5_Init (&ctx);
+  MD5_Update (&ctx, buf, len);
+  MD5_Final (sum, &ctx);
+}
 
 int
 proxy_send (int sock,
@@ -74,7 +81,11 @@ proxy_send (int sock,
 
   len = sizeof (challenge) + MAC_LEN + strlen (passwd);
 
-  buf = tmp = (unsigned char *) xmalloc (len);
+  buf = tmp = (unsigned char *) malloc (len);
+  
+  if(!buf) {
+    return -ENOMEM;
+    }
   
   memcpy (tmp, challenge, sizeof (challenge));
 
@@ -87,9 +98,9 @@ proxy_send (int sock,
   memset (md5sum, 0, sizeof (md5sum));
   md5_buffer (buf, len, md5sum);
 
-  XFREE (buf);
+  free (buf);
 
-  printf ("sum %c%c%c %d\n", md5sum[0],md5sum[1],md5sum[2],len);
+  printf ("sum %c%c%c %zu\n", md5sum[0],md5sum[1],md5sum[2], len);
 
   for (i = j = 0; i < MD5_LENGTH; i++, j += 2)
     {

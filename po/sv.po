@@ -6,83 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wol 0.7.1\n"
 "Report-Msgid-Bugs-To: krennwallner@aon.at\n"
-"POT-Creation-Date: 2004-05-15 09:40+0200\n"
+"POT-Creation-Date: 2024-03-16 15:19-0300\n"
 "PO-Revision-Date: 2004-05-15 09:43+0200\n"
 "Last-Translator: Johan Fredin <griffin@legonet.org>\n"
 "Language-Team:\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: lib/error.c:127
-msgid "Unknown system error"
-msgstr "Okänt systemfel"
-
-#: lib/getopt.c:570 lib/getopt.c:589
-#, c-format
-msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: flaggan `%s' är tvetydig\n"
-
-#: lib/getopt.c:622 lib/getopt.c:626
-#, c-format
-msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: flaggan `--%s' tar inget argument\n"
-
-#: lib/getopt.c:635 lib/getopt.c:640
-#, c-format
-msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: flaggan `%c%s' tar inget argument\n"
-
-#: lib/getopt.c:686 lib/getopt.c:708 lib/getopt.c:1039 lib/getopt.c:1061
-#, c-format
-msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: flaggan `%s' kräver ett argument\n"
-
-#: lib/getopt.c:746 lib/getopt.c:749
-#, c-format
-msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: okänd flagga `--%s'\n"
-
-#: lib/getopt.c:757 lib/getopt.c:760
-#, c-format
-msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: okänd flagga `%c%s'\n"
-
-#: lib/getopt.c:815 lib/getopt.c:818
-#, c-format
-msgid "%s: illegal option -- %c\n"
-msgstr "%s: otillåten flagga -- %c\n"
-
-#: lib/getopt.c:824 lib/getopt.c:827
-#, c-format
-msgid "%s: invalid option -- %c\n"
-msgstr "%s: felaktig flagga -- %c\n"
-
-#: lib/getopt.c:882 lib/getopt.c:901 lib/getopt.c:1114 lib/getopt.c:1135
-#, c-format
-msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: flaggan kräver ett argument -- %c\n"
-
-#: lib/getopt.c:954 lib/getopt.c:973
-#, c-format
-msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s: flaggan `-W %s' är tvetydig\n"
-
-#: lib/getopt.c:997 lib/getopt.c:1018
-#, c-format
-msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: flaggan `-W %s' tar inget argument\n"
-
-#: lib/xmalloc.c:66
-msgid "memory exhausted"
-msgstr "minnet slut"
-
-#: src/wol.c:101
+#: src/wol.c:98
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Försök med \"%s --help\" för mer information.\n"
 
-#: src/wol.c:105
+#: src/wol.c:102
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION] ... MAC-ADDRESS ...\n"
@@ -124,7 +62,7 @@ msgstr ""
 "tal mellan 0 och ff som representerar en byte av adressen, och är i\n"
 "nätverksbyteordning (big endian).\n"
 
-#: src/wol.c:126
+#: src/wol.c:123
 #, c-format
 msgid ""
 "\n"
@@ -135,7 +73,7 @@ msgstr ""
 "PASS skrivs på formen x-x-x-x-x-x, där x är ett hexadecimalt tal\n"
 "mellan 0 och ff som representerar en byte av lösenordet.\n"
 
-#: src/wol.c:130
+#: src/wol.c:127
 #, c-format
 msgid ""
 "\n"
@@ -144,7 +82,7 @@ msgstr ""
 "\n"
 "Rapportera buggar (på engelska, med LC_ALL=C) till <krennwallner@aon.at>\n"
 
-#: src/wol.c:142
+#: src/wol.c:139
 #, c-format
 msgid ""
 "Copyright (C) 2000-2004 Thomas Krennwallner <krennwallner@aon.at>\n"
@@ -156,52 +94,52 @@ msgstr ""
 "finns INGEN garanti, även underförstådd garanti vid KÖP, eller\n"
 "LÄMPLIGHET FÖR NÅGOT SPECIELLT ÄNDAMÅL.\n"
 
-#: src/wol.c:179
+#: src/wol.c:176
 msgid "Too few arguments."
 msgstr "För få argument."
 
-#: src/wol.c:211
+#: src/wol.c:208
 msgid "Invalid time given"
 msgstr "Felaktig tid angiven"
 
-#: src/wol.c:243
+#: src/wol.c:240
 msgid "Invalid port given"
 msgstr "Felaktig port angiven"
 
-#: src/wol.c:262 src/wol.c:356
+#: src/wol.c:259 src/wol.c:353
 msgid "Password"
 msgstr "Lösenord"
 
-#: src/wol.c:282
+#: src/wol.c:279
 msgid "You must specify at least one MAC-ADDRESS."
 msgstr "Du måste ange åtminstone en MAC-ADRESSE."
 
-#: src/wol.c:329 src/wol.c:383
+#: src/wol.c:326 src/wol.c:380
 #, c-format
 msgid "Cannot assemble magic packet for '%s'"
 msgstr "Kan inte skapa Magic Packet för '%s'"
 
-#: src/wol.c:334 src/wol.c:388
+#: src/wol.c:331 src/wol.c:385
 #, c-format
 msgid "Invalid password given for '%s'"
 msgstr "Felaktigt lösenord angivet för '%s'"
 
-#: src/wol.c:341 src/wol.c:370
+#: src/wol.c:338 src/wol.c:367
 #, c-format
 msgid "Cannot send magic packet for '%s' to %s:%d"
 msgstr "Kan inte skicka Magic Packet för '%s' till %s:%d"
 
-#: src/wol.c:396
+#: src/wol.c:393
 #, c-format
 msgid "Waking up %s"
 msgstr "Väcker %s"
 
-#: src/wol.c:399
+#: src/wol.c:396
 #, c-format
 msgid " with %s:%d"
 msgstr " med %s:%d"
 
-#: src/wol.c:401
+#: src/wol.c:398
 #, c-format
 msgid "...\n"
 msgstr "...\n"
@@ -215,3 +153,53 @@ msgstr "Felaktig IP-adress angiven: %s"
 #, c-format
 msgid "Couldn't connect to %s:%hu: %s"
 msgstr "Kunde inte ansluta till %s:%hu: %s"
+
+#~ msgid "Unknown system error"
+#~ msgstr "Okänt systemfel"
+
+#, c-format
+#~ msgid "%s: option `%s' is ambiguous\n"
+#~ msgstr "%s: flaggan `%s' är tvetydig\n"
+
+#, c-format
+#~ msgid "%s: option `--%s' doesn't allow an argument\n"
+#~ msgstr "%s: flaggan `--%s' tar inget argument\n"
+
+#, c-format
+#~ msgid "%s: option `%c%s' doesn't allow an argument\n"
+#~ msgstr "%s: flaggan `%c%s' tar inget argument\n"
+
+#, c-format
+#~ msgid "%s: option `%s' requires an argument\n"
+#~ msgstr "%s: flaggan `%s' kräver ett argument\n"
+
+#, c-format
+#~ msgid "%s: unrecognized option `--%s'\n"
+#~ msgstr "%s: okänd flagga `--%s'\n"
+
+#, c-format
+#~ msgid "%s: unrecognized option `%c%s'\n"
+#~ msgstr "%s: okänd flagga `%c%s'\n"
+
+#, c-format
+#~ msgid "%s: illegal option -- %c\n"
+#~ msgstr "%s: otillåten flagga -- %c\n"
+
+#, c-format
+#~ msgid "%s: invalid option -- %c\n"
+#~ msgstr "%s: felaktig flagga -- %c\n"
+
+#, c-format
+#~ msgid "%s: option requires an argument -- %c\n"
+#~ msgstr "%s: flaggan kräver ett argument -- %c\n"
+
+#, c-format
+#~ msgid "%s: option `-W %s' is ambiguous\n"
+#~ msgstr "%s: flaggan `-W %s' är tvetydig\n"
+
+#, c-format
+#~ msgid "%s: option `-W %s' doesn't allow an argument\n"
+#~ msgstr "%s: flaggan `-W %s' tar inget argument\n"
+
+#~ msgid "memory exhausted"
+#~ msgstr "minnet slut"

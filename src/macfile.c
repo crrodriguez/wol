@@ -28,10 +28,6 @@
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif /* _GNU_SOURCE */
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -41,8 +37,6 @@
 
 #include "wol.h"
 #include "macfile.h"
-#include "xalloc.h"
-#include "getline.h"
 
 
 
@@ -124,7 +118,7 @@ macfile_parse (FILE *fp,
       if ((parsed_tokens = get_tokens (willy, mac, host, port, passwd)) == 0)
 	continue;	
 
-      XFREE (willy);
+      free (willy);
       break;
     }
 

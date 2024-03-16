@@ -32,9 +32,13 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h> /* memset() in HP-UX */
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <net/if.h>
+#include <netinet/in.h>
+#include <netinet/if_ether.h>
+#include <netinet/ether.h>
 
-#include "wrappers.h"
-#include "xalloc.h"
 #include "wol.h"
 #include "magic.h"
 
@@ -93,14 +97,18 @@ magic_create (int with_passwd)
 {
 	struct magic *mag;
 
-	mag = (struct magic *) xmalloc (sizeof (struct magic));
+	mag = (struct magic *) malloc (sizeof (struct magic));
+	if(!mag)
+		return NULL;
 
 	if (with_passwd)
 		mag->size = sizeof (struct secureon);
 	else
 		mag->size = sizeof (struct packet);
 
-	mag->packet = (unsigned char *) xmalloc (mag->size);
+	mag->packet = (unsigned char *) malloc (mag->size);
+	if(!mag->packet)
+		return NULL;
 
 	return mag;
 }
@@ -110,8 +118,8 @@ magic_create (int with_passwd)
 void
 magic_destroy (struct magic *m)
 {
-	XFREE ((void *) m->packet);
-	XFREE ((void *) m);
+	free ((void *) m->packet);
+	free ((void *) m);
 }
 
 
@@ -142,21 +150,20 @@ magic_assemble (struct magic *magic_buf, const char *mac_str,
 				}
 
 			for (j = 0; j < MAC_LEN; ++j)
-				m[j] = ea.ETHER_ADDR_OCTET[j];
+				m[j] = ea.ether_addr_octet[j];
 		}
 
 	/* accommodate the packet chunk's size to the packet type */
 	if (passwd_str && magic_buf->size != sizeof (struct secureon))
 		{
-			magic_buf->packet = \
-									(unsigned char *) xrealloc ((void *) magic_buf->packet,
+			magic_buf->packet = (unsigned char *) realloc ((void *) magic_buf->packet,
 																							sizeof (struct secureon));
 			magic_buf->size = sizeof (struct secureon);
 		}
 	else if (passwd_str == NULL && magic_buf->size != sizeof (struct packet))
 		{
 			magic_buf->packet = \
-									(unsigned char *) xrealloc ((void *) magic_buf->packet,
+									(unsigned char *) realloc ((void *) magic_buf->packet,
 																							sizeof (struct packet));
 			magic_buf->size = sizeof (struct packet);
 		}
