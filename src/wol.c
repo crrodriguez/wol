@@ -38,9 +38,6 @@
 #include "proxy.h"
 #include "wol.h"
 
-/* My name is argv[0], used by error() */
-char *program_name;
-
 /* pointer to a MAC address */
 static char *mac_str = NULL;
 
@@ -81,7 +78,7 @@ static int sockfd = -1;
 
 static void usage(int status) {
         if (status) {
-                fprintf(stderr, _("Try `%s --help' for more information.\n"), program_name);
+                fprintf(stderr, _("Try `%s --help' for more information.\n"), program_invocation_name);
         } else {
                 fprintf(stdout,
                         _("\
@@ -104,7 +101,7 @@ Wake On LAN client - wakes up magic packet compliant machines.\n\n\
 Each MAC-ADDRESS is written as x:x:x:x:x:x, where x is a hexadecimal number\n\
 between 0 and ff which represents one byte of the address, which is in\n\
 network byte order (big endian).\n"),
-                        program_name);
+                        program_invocation_name);
 
                 fprintf(stdout, _("\n\
 PASS is written as x-x-x-x-x-x, where x is a hexadecimal number between 0\n\
@@ -338,9 +335,6 @@ int main(int argc, char *argv[]) {
         int i;
         int ret = 0;
 
-        /* my name is ... */
-        program_name = argv[0];
-
 #if ENABLE_NLS
         setlocale(LC_ALL, "");
         bindtextdomain(PACKAGE, LOCALEDIR);
@@ -381,7 +375,7 @@ int main(int argc, char *argv[]) {
                 if (request_stdin) {
                         fp = stdin;
                 } else {
-                        fp = fopen(pathname, "r");
+                        fp = fopen(pathname, "re");
                         if (fp == NULL) {
                                 error(1, errno, "%s", pathname);
                         }
@@ -406,7 +400,7 @@ int main(int argc, char *argv[]) {
                 fclose(fp);
         }
 
-        net_close(sockfd);
+        close(sockfd);
 
         magic_destroy(magic);
 

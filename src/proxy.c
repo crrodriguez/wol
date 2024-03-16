@@ -44,7 +44,7 @@ static void md5_buffer(const unsigned char *buf, size_t len, unsigned char *sum)
 
 int proxy_send(int sock, const char *macbuf, const char *passwd) {
         size_t i, j, len;
-        unsigned char rsbuf[HEX_CHALLENGE];
+        unsigned char rsbuf[HEX_CHALLENGE + 1];
         unsigned char challenge[CHALLENGE_LENGTH];
         unsigned char md5sum[MD5_LENGTH];
         unsigned char *buf, *tmp;

@@ -49,15 +49,6 @@ static int net_resolv(const char *hostname, struct in_addr *sin_addr) {
         return 0;
 }
 
-int net_close(int socket) {
-        if (close(socket)) {
-                perror("Couldn't close socket");
-                return -1;
-        }
-
-        return 0;
-}
-
 int raw_open(void) {
         int optval;
         int sockfd;
@@ -107,13 +98,11 @@ int udp_open(void) {
 
 int tcp_open(const char *ip_str, unsigned int port) {
         int sockfd;
-        struct sockaddr_in toaddr;
+        struct sockaddr_in toaddr = {};
 
         if (ip_str == NULL) {
                 return -1;
         }
-
-        memset(&toaddr, 0, sizeof(struct sockaddr_in));
 
         if (net_resolv(ip_str, &toaddr.sin_addr)) {
                 error(0, 0, _("Invalid IP address given: %s"), strerror(errno));
@@ -139,15 +128,12 @@ int tcp_open(const char *ip_str, unsigned int port) {
 }
 
 ssize_t raw_send(int sock, const void *buf, size_t len) {
-        struct sockaddr_ll toaddr;
+        struct sockaddr_ll toaddr = {};
         ssize_t sendret;
 
         if (buf == NULL) {
                 return -1;
         }
-
-        memset(&toaddr, 0, sizeof(toaddr));
-
         toaddr.sll_family = AF_PACKET;
 
         /* maybe we need to set more data */
@@ -175,14 +161,12 @@ ssize_t raw_send(int sock, const void *buf, size_t len) {
 }
 
 ssize_t udp_send(int sock, const char *ip_str, unsigned short int port, const void *buf, size_t len) {
-        struct sockaddr_in toaddr;
+        struct sockaddr_in toaddr = {};
         ssize_t sendret;
 
         if (ip_str == NULL || buf == NULL) {
                 return -1;
         }
-
-        memset(&toaddr, 0, sizeof(toaddr));
 
         if (net_resolv(ip_str, &toaddr.sin_addr)) {
                 error(0, 0, _("Invalid IP address given: %s"), strerror(errno));
@@ -199,7 +183,7 @@ ssize_t udp_send(int sock, const char *ip_str, unsigned short int port, const vo
 }
 
 ssize_t tcp_send(int sock, const void *buf, size_t len) {
-        return send(sock, buf, len, 0);
+        return send(sock, buf, len, MSG_NOSIGNAL);
 }
 
 ssize_t tcp_recv(int sock, void *buf, size_t len) {
