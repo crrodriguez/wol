@@ -47,27 +47,16 @@ else
 fi
 AM_CONDITIONAL([POD2TEXI], [test x$do_pod2texi = xyes])
 
-
 dnl i18n
 ALL_LINGUAS="de fr it es sv"
-dnl don't pass symbol [external] since it will disable local intl directory
-AM_GNU_GETTEXT
-
-
-dnl
-dnl check header files
-dnl
-
-AC_CHECK_HEADERS([stdio.h unistd.h getopt.h locale.h libintl.h])
-
+AM_GNU_GETTEXT([external])
 
 dnl create the Makefiles
-AC_CONFIG_FILES([intl/Makefile po/Makefile.in
+AC_CONFIG_FILES([po/Makefile.in
 Makefile
 demo/Makefile
 doc/Makefile
 include/Makefile
-lib/Makefile
 m4/Makefile
 src/Makefile
 src/wol-dhcpdconf
