@@ -80,7 +80,7 @@ static unsigned int packet_mode = UDP_MODE;
 
 
 /* how long to wait between packets */
-static int msecs = 0;
+static unsigned int msecs = 0;
 
 /* a magic packet */
 static struct magic *magic = NULL;
@@ -227,6 +227,7 @@ parse_args (int argc, char *argv[])
 	case 's':
 	  packet_mode |= PROXY_MODE;
 	  packet_mode &= ~(UDP_MODE | RAW_MODE);
+    break;
 	case 'h':
 	case 'i':
 	  host_str = optarg;
@@ -251,7 +252,6 @@ parse_args (int argc, char *argv[])
 	case 'P':
 	  if (optarg == NULL)
 	    {
-	      size_t n;
 	      
 	      if (password_set)
 		break;
@@ -343,7 +343,6 @@ assemble_and_send (struct magic *m,
     }
   else if (packet_mode & PROXY_MODE)
     {
-      size_t n;
       char *proxy_pass = (char *) pass_str;
       int errval;
 

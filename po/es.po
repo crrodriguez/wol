@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wol 0.7.1\n"
 "Report-Msgid-Bugs-To: krennwallner@aon.at\n"
-"POT-Creation-Date: 2024-03-16 15:19-0300\n"
+"POT-Creation-Date: 2024-03-16 15:49-0300\n"
 "PO-Revision-Date: 2004-04-18 11:27+0200\n"
 "Last-Translator: Magin Lopez <magin@giodental.com>\n"
 "Language-Team:\n"
@@ -109,40 +109,40 @@ msgstr "El tiempo introducido no es válido"
 msgid "Invalid port given"
 msgstr "El puerto introducido no es válido"
 
-#: src/wol.c:259 src/wol.c:353
+#: src/wol.c:258 src/wol.c:352
 msgid "Password"
 msgstr "Contraseña"
 
-#: src/wol.c:279
+#: src/wol.c:278
 msgid "You must specify at least one MAC-ADDRESS."
 msgstr "Debes especificar al menos una dirección MAC."
 
-#: src/wol.c:326 src/wol.c:380
+#: src/wol.c:325 src/wol.c:379
 #, c-format
 msgid "Cannot assemble magic packet for '%s'"
 msgstr "No se puede crear un  magic packet para '%s'"
 
-#: src/wol.c:331 src/wol.c:385
+#: src/wol.c:330 src/wol.c:384
 #, c-format
 msgid "Invalid password given for '%s'"
 msgstr "Contraseña no válida para '%s'"
 
-#: src/wol.c:338 src/wol.c:367
+#: src/wol.c:337 src/wol.c:366
 #, c-format
 msgid "Cannot send magic packet for '%s' to %s:%d"
 msgstr "No se puede enviar un magic packet para '%s' a '%s':%d"
 
-#: src/wol.c:393
+#: src/wol.c:392
 #, c-format
 msgid "Waking up %s"
 msgstr "Encendiendo %s"
 
-#: src/wol.c:396
+#: src/wol.c:395
 #, c-format
 msgid " with %s:%d"
 msgstr " con %s:%d"
 
-#: src/wol.c:398
+#: src/wol.c:397
 #, c-format
 msgid "...\n"
 msgstr "...\n"

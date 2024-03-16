@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wol 0.7.1\n"
 "Report-Msgid-Bugs-To: krennwallner@aon.at\n"
-"POT-Creation-Date: 2024-03-16 15:19-0300\n"
+"POT-Creation-Date: 2024-03-16 15:49-0300\n"
 "PO-Revision-Date: 2004-05-15 09:43+0200\n"
 "Last-Translator: Johan Fredin <griffin@legonet.org>\n"
 "Language-Team:\n"
@@ -106,40 +106,40 @@ msgstr "Felaktig tid angiven"
 msgid "Invalid port given"
 msgstr "Felaktig port angiven"
 
-#: src/wol.c:259 src/wol.c:353
+#: src/wol.c:258 src/wol.c:352
 msgid "Password"
 msgstr "Lösenord"
 
-#: src/wol.c:279
+#: src/wol.c:278
 msgid "You must specify at least one MAC-ADDRESS."
 msgstr "Du måste ange åtminstone en MAC-ADRESSE."
 
-#: src/wol.c:326 src/wol.c:380
+#: src/wol.c:325 src/wol.c:379
 #, c-format
 msgid "Cannot assemble magic packet for '%s'"
 msgstr "Kan inte skapa Magic Packet för '%s'"
 
-#: src/wol.c:331 src/wol.c:385
+#: src/wol.c:330 src/wol.c:384
 #, c-format
 msgid "Invalid password given for '%s'"
 msgstr "Felaktigt lösenord angivet för '%s'"
 
-#: src/wol.c:338 src/wol.c:367
+#: src/wol.c:337 src/wol.c:366
 #, c-format
 msgid "Cannot send magic packet for '%s' to %s:%d"
 msgstr "Kan inte skicka Magic Packet för '%s' till %s:%d"
 
-#: src/wol.c:393
+#: src/wol.c:392
 #, c-format
 msgid "Waking up %s"
 msgstr "Väcker %s"
 
-#: src/wol.c:396
+#: src/wol.c:395
 #, c-format
 msgid " with %s:%d"
 msgstr " med %s:%d"
 
-#: src/wol.c:398
+#: src/wol.c:397
 #, c-format
 msgid "...\n"
 msgstr "...\n"

@@ -128,7 +128,7 @@ int
 magic_assemble (struct magic *magic_buf, const char *mac_str,
 								const char *passwd_str)
 {
-	int m[MAC_LEN];
+	unsigned int m[MAC_LEN];
 	int j, k;
 
 
@@ -183,7 +183,7 @@ magic_assemble (struct magic *magic_buf, const char *mac_str,
 	/* add the SecureON passwd */
 	if (passwd_str)
 		{
-			int s[MAGIC_SECUREON];
+			unsigned int s[MAGIC_SECUREON];
 
 			/* split the password string into it's hex components */
 			if (sscanf (passwd_str, "%2x-%2x-%2x-%2x-%2x-%2x",

@@ -30,10 +30,7 @@
 #endif /* HAVE_CONFIG_H */
 
 
-#if defined(HAVE_LOCALE_H)
 #include <locale.h>
-#endif /* HAVE_LOCALE_H */
-
 
 /* i18n support */
 #if defined(ENABLE_NLS)
