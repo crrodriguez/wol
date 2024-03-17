@@ -7,4 +7,4 @@ sources = [
 'wol.c'
 ]
 # Create the executable target
-executable('wol', sources, gnu_symbol_visibility : 'hidden')
+executable('wol', sources, gnu_symbol_visibility : 'hidden', install : true)
