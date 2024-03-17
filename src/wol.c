@@ -335,11 +335,9 @@ int main(int argc, char *argv[]) {
         int i;
         int ret = 0;
 
-#if ENABLE_NLS
         setlocale(LC_ALL, "");
         bindtextdomain(PACKAGE, LOCALEDIR);
         textdomain(PACKAGE);
-#endif /* ENABLE_NLS */
 
         i = parse_args(argc, argv);
 

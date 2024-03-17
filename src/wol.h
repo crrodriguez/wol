@@ -28,12 +28,8 @@
 #include <locale.h>
 
 /* i18n support */
-#if defined(ENABLE_NLS)
-#        include <libintl.h>
-#        define _(Text) gettext(Text)
-#else
-#        define _(Text) Text
-#endif /* ENABLE_NLS */
+#include <libintl.h>
+#define _(Text) gettext(Text)
 
 
 #define DEFAULT_PORT 40000
